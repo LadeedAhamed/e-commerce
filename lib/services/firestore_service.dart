@@ -30,5 +30,3 @@ class FirestoreService {
     return await firestore.collection("products").doc(id).delete();
   }
 }
-
-// Inside Firestore service

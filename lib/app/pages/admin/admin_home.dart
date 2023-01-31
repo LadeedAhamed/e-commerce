@@ -1,8 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_commerce/app/providers.dart';
 import 'package:e_commerce/models/product_model.dart';
+import 'package:e_commerce/widgets/project_list_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:lottie/lottie.dart';
+import '../../../utils/snackbars.dart';
+import '../../../widgets/empty_widget.dart';
 import 'admin_add_product.dart';
 
 class AdminHome extends ConsumerWidget {
@@ -26,21 +30,31 @@ class AdminHome extends ConsumerWidget {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.active &&
               snapshot.data != null) {
+            if (snapshot.data!.isEmpty) {
+              return const EmptyWidget();
+            }
             return ListView.builder(
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
                 final product = snapshot.data![index];
-                return ListTile(
-                  leading: product.imageUrl != ""
-                      ? Image.network(product.imageUrl)
-                      : Container(),
-                  title: Text(product.name),
-                  subtitle: Text(product.description),
-                  trailing: IconButton(
-                      icon: const Icon(Icons.delete),
-                      onPressed: () => ref
+                return Padding(
+                  padding: const EdgeInsets.all(8.5),
+                  child: ProductListTile(
+                    product: product,
+                    onDelete: () async {
+                      openIconSnackBar(
+                        context,
+                        "Deleting item...",
+                        const Icon(
+                          Icons.delete,
+                          color: Colors.white,
+                        ),
+                      );
+                      await ref
                           .read(databaseProvider)!
-                          .deleteProduct(product.id!)),
+                          .deleteProduct(product.id!);
+                    },
+                  ),
                 );
               },
             );

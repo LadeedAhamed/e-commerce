@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:e_commerce/utils/snackbars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
@@ -66,7 +67,7 @@ class _AdminAddProductPageState extends ConsumerState<AdminAddProductPage> {
                     source: ImageSource.gallery,
                   );
                   if (image != null) {
-                    ref.read(addImageProvider.notifier).state = image;
+                    ref.watch(addImageProvider.notifier).state = image;
                   }
                 },
               ),
@@ -88,13 +89,10 @@ class _AdminAddProductPageState extends ConsumerState<AdminAddProductPage> {
     final imageFile =
         ref.read(addImageProvider.notifier).state; // referece the image File
     if (storage == null || fileStorage == null || imageFile == null) {
-      // make sure none of them are null
       print("Error: storage, fileStorage or imageFile is null");
       return;
     }
-    // Upload to Filestorage
     final imageUrl = await fileStorage.uploadFile(
-      // upload File using our
       imageFile.path,
     );
     await storage.addProduct(Product(
@@ -103,11 +101,12 @@ class _AdminAddProductPageState extends ConsumerState<AdminAddProductPage> {
       price: double.parse(priceEditingController.text),
       imageUrl: imageUrl,
     ));
+    openIconSnackBar(context, "Product added successfully",
+        const Icon(Icons.check, color: Colors.white));
     Navigator.pop(context);
   }
 }
 
-// Create an image provider with riverpod
 final addImageProvider = StateProvider<XFile?>((_) => null);
 
 class CustomInputFieldFb1 extends StatelessWidget {
