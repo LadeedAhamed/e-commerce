@@ -2,7 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../services/firestore_service.dart';
+import '../services/payment_service.dart';
 import '../services/storage_service.dart';
+import '../view_models/bag_view_model.dart';
 
 final firebaseAuthProvider =
     Provider<FirebaseAuth>((ref) => FirebaseAuth.instance);
@@ -28,4 +30,13 @@ final storageProvider = Provider<StorageService?>((ref) {
     return StorageService(uid: uid);
   }
   return null;
+});
+
+final bagProvider = ChangeNotifierProvider<BagViewModel>((ref) {
+  return BagViewModel();
+});
+
+
+final paymentProvider = Provider<PaymentService>((ref) {
+  return PaymentService();
 });

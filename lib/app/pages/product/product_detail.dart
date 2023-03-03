@@ -6,6 +6,9 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../providers.dart';
+import '../user/user_bag.dart';
+
 class ProductDetail extends ConsumerWidget {
   final Product product;
   const ProductDetail({Key? key, required this.product}) : super(key: key);
@@ -97,7 +100,11 @@ class ProductDetail extends ConsumerWidget {
               height: 25,
             ),
             GestureDetector(
-              onTap: () {},
+              onTap: () {
+                ref.read(bagProvider).addProduct(product); // Adds a product
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const UserBag()));
+              },
               child: Container(
                 width: double.infinity,
                 height: 50,
