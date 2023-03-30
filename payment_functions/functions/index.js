@@ -1,10 +1,8 @@
-
-
-/* eslint-disable */
 const functions = require("firebase-functions");
 
-// Get our stripe keys from environment variables
 const stripe = require("stripe")(functions.config().stripe.testkey);
+
+
 exports.stripePaymentIntentRequest = functions.https.onRequest(async (req, res) => {
     try {
         let customerId;
